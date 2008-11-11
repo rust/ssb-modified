@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <script type="text/javascript" src="javascripts/prototype.js"></script>
+  <script type="text/javascript" src="javascripts/cookiemanager.js"></script>
+  <script type="text/javascript" src="javascripts/ktai_db.js"></script>
+  <script type="text/javascript" src="javascripts/suggest.js"></script>
+  <script type="text/javascript" src="javascripts/ssb.js"></script>
+  <link rel="stylesheet" href="stylesheets/ssb.css" type="text/css" media="screen" />
+
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="content-style-type" content="text/css" />
+  <title><%= title.nil? ? 'no title' : title %> - server side browser</title>
+</head>
+<body>
+  <div id="header">
+    <form action="./" id="location" method="get" name="location">
+      ssb
+      <input id="uri_input" name="ssb_q" size="60" value="<%= request_uri %>" type="text" />
+      <input id="move_button" value="移動" type="submit" />
+    </form>
+  </div>
+
+  <div id="client">
+    <!-- ケータイページ部分 -->
+    <div id="page"><%= page %></div>
+
+    <!-- サイドバー -->
+    <div id="sidebar">
+      <div id="status_bar">
+        <div id="qrcode">
+		  <table style="border-width: 0px; border-style: none; border-color: #0000ff; border-collapse: collapse;">
+			<% qrcode.each_line do |qr_line| %>
+			<tr>
+			  <% qr_line.chomp.each_byte do |qr_c| %>
+			    <% if qr_c == 48 then %>
+			      <td style="border-width: 0px; border-style: none; border-color: #0000ff; border-collapse: collapse; padding: 0; margin: 0; width: 2px; height: 2px; background-color: #ffffff;"/>
+			    <% else %>
+			      <td style="border-width: 0px; border-style: none; border-color: #0000ff; border-collapse: collapse; padding: 0; margin: 0; width: 2px; height: 2px; background-color: #000000;"/>
+			    <% end %>
+	          <% end %>
+			</tr>
+			<% end %>
+		  </table>
+		</div>
+
+        <table id="time_status">
+          <tbody>
+            <tr>
+              <td class="time_label">応答時間</td>
+              <%
+  time_class =
+  case @time_stamp.request_time
+  when 0..500
+    "time_safe"
+  when 501..1000
+    "time_notice"
+  else
+    "time_warning"
+  end %>
+              <td class="<%= time_class %>"><%= SSB::Misc.numeric(@time_stamp.request_time) %></td>
+              <td class="time_unit">ms</td>
+            </tr>
+            <tr>
+              <td class="time_label">変換処理時間</td>
+              <td class="time"><%= SSB::Misc.numeric(@time_stamp.proc_time) %></td>
+              <td class="time_unit">ms</td>
+            </tr>
+            <tr>
+              <td class="time_label">合計</td>
+              <td class="time"><%= SSB::Misc.numeric(@time_stamp.total_time) %></td>
+              <td class="time_unit">ms</td>
+            </tr>
+            <tr>
+              <td class="time_label">サイズ</td>
+              <td class="time"><%= SSB::Misc.numeric(source.size) %></td>
+              <td class="time_unit">bytes</td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div> <!-- status_bar -->
+
+	  <!-- ケータイ -->
+	  <div id="terminal">
+		<h2>
+		  ケータイ <a href="#" id="suggest_start">機種変更</a>
+		  <form id="suggest_form">
+		  </form>
+		</h2>
+		<div id="term_select"></div>
+		<p>
+		  User-Agent: <%= term[:useragent] %><br />
+		  UID: <%= term[:uid] %><br />
+		  HID: <%= term[:hid] %><br />
+		</p>
+	  </div> <!-- terminal -->
+	  <div class="clear"> </div>
+
+      <!-- タブ -->
+      <ul id="pane_tab_group" class="tab_group">
+        <li id="tab_status" class="tab tab_close">ステータス</li>
+        <li id="tab_source" class="tab tab_close">HTML</li>
+        <li id="tab_setting" class="tab tab_close">ケータイ設定</li>
+        <li id="tab_about" class="tab tab_close">ssbについて...</li>
+      </ul>
+      <div class="clear"> </div>
+
+      <!-- 詳細情報ペイン -->
+      <div id="pane_status" class="pane pane_close">
+        <div id="http_header">
+          <pre>
+リクエストヘッダ
+<%= @request.request_header.map{|k,v| "#{k}: #{v}"}.join("\n") %>
+
+レスポンスヘッダ
+<%= response_header.map{|k,v| "#{k}: #{v}"}.join("\n") %>
+</pre>
+        </div> <!-- http_header -->
+      </div> <!-- pane_status -->
+
+      <!-- source -->
+      <div id="pane_source" class="pane pane_close">
+        <div id="source">
+          <pre><%= source %></pre>
+        </div>
+      </div>
+
+      <!-- setting -->
+      <div id="pane_setting" class="pane pane_close">
+        <form id="term_form" action="">
+          <fieldset id="term_input_field">
+            <table>
+              <tr>
+                <td class="term_param_label">ホームページ</td>
+                <td class="term_param_input"><input id="field_homepage" type="text" size="50" name="homepage" value="<%= term[:homepage] %>"/></td>
+              </tr>
+              <tr>
+                <td class="term_param_label">メールアドレス</td>
+                <td class="term_param_input">
+				  <input id="field_mailaddr" type="text" size="50" name="mailaddr" value="<%= term[:mailaddr] %>"/>
+				</td>
+              </tr>
+              <tr>
+                <td class="term_param_label"><hr /></td>
+				<td class="term_param_input"></td>
+              </tr>
+              <tr>
+                <td class="term_param_label">User-Agent</td>
+                <td class="term_param_input"><input id="field_useragent" type="text" size="50" name="useragent" value="<%= term[:useragent] %>"/></td>
+              </tr>
+              <tr>
+                <td class="term_param_label"><hr /></td>
+                <td class="term_param_input"></td>
+              </tr>
+              <tr>
+                <td class="term_param_label">UID</td>
+                <td class="term_param_input"><input id="field_uid" type="text" size="50" name="uid" value="<%= term[:uid] %>" /></td>
+              </tr>
+              <tr>
+                <td class="term_param_label">端末ID / HID</td>
+                <td class="term_param_input"><input id="field_hid" type="text" size="50" name="hid" value="<%= term[:hid] %>" /></td>
+              </tr>
+              <tr>
+                <td class="term_param_label">FOMAカードID</td>
+                <td class="term_param_input"><input id="field_icc" type="text" size="50" name="icc" value="<%= term[:icc] %>" /></td>
+              </tr>
+              <tr>
+                <td class="term_param_label"><hr /></td>
+                <td class="term_param_input"></td>
+              </tr>
+              <tr>
+                <td class="term_param_label">拡張リクエストヘッダ</td>
+                <td class="term_param_input"><textarea id="field_exheader" cols="50" rows="5" name="exheader"><%= term[:exheader] %></textarea></td>
+              </tr>
+            </table>
+          </fieldset>
+          <fieldset id="term_control_panel">
+            <input type="submit" name="action" value="save" /> ケータイ設定をcookieに保存する
+            <input type="reset" name="action" value="clear" /> cookieを消去して初期設定に戻す
+          </fieldset>
+          <input type="hidden" name="q" value="<%= @q %>" />
+        </form>
+      </div>
+
+      <!-- about -->
+      <div id="pane_about" class="pane pane_close">
+        <h2>Server Side Browser</h2>
+        <p>
+          <a href="http://coderepos.org/share/wiki/ssb">http://coderepos.org/share/wiki/ssb</a><br />
+		  
+          <p>Author: <a href="http://coji.s9.xrea.com/">coji</a> and all <a href="http://coderepos.org/share/">coderepos</a> committers.</p>
+		  <br />
+		  <p>機種変更時に利用される携帯端末情報は、<a href="http://ke-tai.org/moblist/">ke-tai.orgのデータ</a>を利用しています。<br />端末情報を最新のものに更新するにはssbのディレクトリでコマンドラインから、<pre>rake ktai:update</pre>と入力してください。</p>
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

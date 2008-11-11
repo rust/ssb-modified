@@ -1,0 +1,8 @@
+default:
+  useragent: "DoCoMo/2.0 P905i"
+  uid: "010000000000"
+  hid: "ser000000000000000"
+  icc: "icc000000000000000"
+  homepage: 'about:blank'
+  exheader: 
+  mailaddr: 

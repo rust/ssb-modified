@@ -1,0 +1,11 @@
+DirectoryIndex index.rbx
+<FilesMatch "\.rbx$">
+  SetHandler cgi-script
+</FilesMatch>
+
+RewriteEngine On
+#RewriteBase /path/to/app/
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteRule (.+) ?q=$1 [R,QSA]
+

@@ -1,0 +1,244 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100%;
+}
+
+h1 {
+  font-size: large;
+}
+
+h2, h3 {
+  font-size: normal;
+}
+
+h4,h5,h6 {
+  font-size: small;
+}
+
+a img {
+  border: 0;
+}
+
+td {
+  vertical-align: top;
+}
+
+img.emoji {
+  border: 0;
+}
+
+div.clear {
+  clear: both;
+}
+
+#header {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: x-small;
+}
+
+#header #uri_input {
+  width: 80%;
+  font-size: normal;
+}
+
+#header #move_button {
+  width: 60px;
+}
+
+#client {
+  width: 97%;
+  margin: 20px;
+  min-width: 900px;
+  height: 100%;
+}
+
+#client #page {
+  width: 257px;
+  border: 1px solid gray;
+  float: left;
+  overflow: auto;
+  height: 500px;
+}
+
+#client #sidebar {
+  font-size: small;
+  float: left;
+  margin-left: 10px;
+  width: 600px;
+  height: 400px;
+  color: gray;
+  background-color: white;
+}
+
+#client #sidebar #status_bar {
+  width: 240px;
+  min-height: 100px;
+  margin-bottom: 10px;
+  float: left;
+  font-size: x-small;
+}
+
+#client #sidebar #status_bar #qrcode {
+  float: left;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+#client #sidebar #status_bar #time_status {
+  font-size: x-small;
+}
+
+#client #sidebar #status_bar #time_status .time,
+#client #sidebar #status_bar #time_status .time_safe,
+#client #sidebar #status_bar #time_status .time_notice,
+#client #sidebar #status_bar #time_status .time_warning {
+  text-align: right;
+  width: 3em;
+}
+
+#client #sidebar #status_bar #time_status .time {
+  color: gray;
+  background-color: white;
+  border: solid 1px gray;
+}
+
+#client #sidebar #status_bar #time_status .time_safe {
+  color: green;
+  background-color: #f0f0ff;
+  border: 1px solid green;
+}
+
+#client #sidebar #status_bar #time_status .time_notice {
+  color: orange;
+  background-color: #fffff0;
+  border: solid 1px orange;
+}
+
+#client #sidebar #status_bar #time_status .time_warning {
+  color: red;
+  background-color: #fff0f0;
+  border: solid 1px red;
+}
+
+#client #sidebar #terminal {
+  font-family: monospace;
+  width: 350px;
+  background-color: #f0f0f0;
+  border: 2px solid gray;
+  float: left;
+}
+
+#client #sidebar #terminal h2 {
+  font-size: small;
+  background-color: gray;
+  color: white;
+  margin: 0;
+}
+
+#client #sidebar #terminal h2 #suggest_start {
+  font-size: x-small;
+  color: orange;
+  font-weight: normal;
+  margin: 0;
+}
+
+#client #sidebar #terminal .select { 
+  background-color: orange;
+  color: white;
+}
+
+#client #sidebar #terminal #term_select { 
+  background-color: white;
+  border-bottom: 1px solid gray;
+}
+
+#client #sidebar #pane_tab_group {
+  clear: left;
+}
+
+#client #sidebar #pane_tab_group li {
+  float: left;
+}
+
+#client #sidebar #pane_tab_group .tab_open,
+#client #sidebar #pane_tab_group .tab_close {
+  float: left;
+  list-style-type: none;
+  padding-top: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 4px;
+  cursor: pointer;
+  background-color: #e0e0e0;
+}
+
+#client #sidebar #pane_tab_group .tab_open {
+  color: white;
+  background-color: gray;
+}
+
+#client #sidebar #pane_status #http_header,
+#client #sidebar #pane_source #source {
+  font-family: monospace;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+  }
+
+#client #sidebar #pane_status #http_header pre,
+#client #sidebar #pane_source #source pre {
+  white-space: -moz-pre-wrap; /* Mozilla */
+  white-space: -pre-wrap;     /* Opera 4-6 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  white-space: pre-wrap;      /* CSS3 */
+  word-wrap: break-word;      /* IE 5.5+ */
+}
+
+#client #sidebar #pane_setting #term_form {
+  font-size: small;
+  margin: 4px;
+}
+
+#client #sidebar #pane_setting #term_form fieldset {
+  border: none;
+}
+
+#client #sidebar #pane_setting #term_form fieldset hr {
+  margin: 2px;
+  border: solid 1px gray;
+}
+
+#client #sidebar #pane_setting #term_form fieldset#term_input_field table {
+  width: 100%;
+}
+
+#client #sidebar #pane_setting #term_form fieldset#term_input_field td.term_param_input input,
+#client #sidebar #pane_setting #term_form fieldset#term_input_field td.term_param_input textarea {
+  width: 99%;
+}
+
+#client #sidebar #pane_setting #term_form fieldset#term_control_panel {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#client #sidebar div.pane_open,
+#client #sidebar div.pane_close {
+  position: absolute;
+  width: 600px;
+  height: 357px;
+  overflow: auto;
+}
+
+#client #sidebar div.pane_open {
+  border: 2px solid gray;
+}
+
+#client #sidebar div.pane_close {
+  visibility: hidden;
+}

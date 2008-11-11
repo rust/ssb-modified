@@ -1,0 +1,75 @@
+Server Side Browser
+
+ケータイサイトをPCで見るための変換Webアプリです。
+指定されたURLからHTMLをとってきて、バカ置換をかますだけです。
+
+必要なもの(なくてもとりあえず動きます)
+ - rake (setup/unit test)
+ - scrapi (絵文字画像のダウンロード)
+ - ImageMagick (convert 絵文字画像のサイズ変換)
+ - Ghostscript (KDDI絵文字 aiファイルからの変換用)
+ - mod_ruby (apache + mod_rubyで動かす場合)
+ - lha (KDDI絵文字アーカイブ解凍)
+ - dust (unit test)
+ - flexmock (unit test mocks)
+
+動作確認環境:
+
+ - Mac OS X 10.5.1
+ - apache2 2.2.6
+ - ImageMagick 6.3.6-10
+ - ghostscript 8.60
+ - ruby 1.8.6 (2007-09-23 patchlevel 110)
+ - mod_ruby 1.2.6
+ - rake 0.7.3 (gem)
+ - scrapi 1.2.0 (gem)
+ - dust 0.1.6 (gem)
+ - flexmock 0.8.0 (gem)
+
+How to install:
+
+1. ソースコードをとってくる
+
+  $ svn co http://svn.coderepos.org/share/lang/ruby/ssb/trunk ssb
+
+
+2. とりあえず動かす
+
+  $ ruby ssb-webrick.rb
+
+  これで http://localhost:10080/ で動作します。
+  オプション
+    -p port    待ち受けポート番号。デフォルトは10080
+    --bind ip  bindするIPアドレス。デフォルトは127.0.0.1
+    --cgi-mode 開発・デバッグ用(コード変えても再起動不要に)
+
+3. ssbのセットアップ/設定変更
+
+  各キャリアの絵文字を取得して絵文字を表示できるようにします。
+  rake が必要なので、別途 gem install rake してください。
+
+  $ rake setup
+
+  設定ファイルをデフォルトからコピーした上でキャリアから絵文字データを
+  ダウンロード・変換します。
+
+
+TODO:
+
+ - XSSとかのセキュリティ対策。まったくケアしてないので公開サイトでは使えない。
+
+ - HTML変換部分をもうちょっとマシにしたい。
+   今は正規表現で丸ごと変換してるだけなので元のHTMLがおかしいと画面が崩れる
+
+ - Moxy みたいに処理のプラグイン化。
+   項目ごとに On/Off したいし、拡張もしやすくしたい。
+
+ - コード全般がへぼいのをなんとか。。
+
+
+謝辞:
+ - id:tokuhirom
+ - id:babie
+ - ursm
+ - lchin
+ - id:miyagawa
