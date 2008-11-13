@@ -1,2 +1,3 @@
 config/ke-tai_list.csv
 public_html/**/*
+logs/*

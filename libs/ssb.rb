@@ -152,6 +152,8 @@ module SSB
         request_host = "http://" + request_uri.host
       when 443
         request_host = "https://" + request_uri.host
+      when nil
+        request_host = ""
       else
         request_host = "http://" + request_uri.host + ':' + request_uri.port.to_s
       end
