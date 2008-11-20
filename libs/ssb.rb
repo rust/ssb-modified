@@ -163,25 +163,32 @@ module SSB
         begin
           attribute = $1.downcase
           value     = $3 || $4
+          braket    = $5
           # href=""/href='' の場合の対策
           value     = value.gsub(/["|']/, "")
           case attribute
           when 'src', 'data', 'href'
             case value[0,1]
             when '#'
-              %Q! #{attribute}="#{value}"#{$5} target="_top">!
+              %Q! #{attribute}="#{value}"#{braket} target="_top">!
             when '/'
-              %Q! #{attribute}="./?ssb_q=#{WEBrick::HTTPUtils.escape_form((request_host + CGI.unescapeHTML(value)).to_s)}"#{$5} target="_top">!
+              %Q! #{attribute}="./?ssb_q=#{WEBrick::HTTPUtils.escape_form((request_host + CGI.unescapeHTML(value)).to_s)}"#{braket} target="_top">!
             else
-              %Q! #{attribute}="./?ssb_q=#{WEBrick::HTTPUtils.escape_form((request_uri + CGI.escape(CGI.unescapeHTML(value))).to_s)}"#{$5} target="_top">!
+              %Q! #{attribute}="./?ssb_q=#{WEBrick::HTTPUtils.escape_form((request_uri + CGI.escape(CGI.unescapeHTML(value))).to_s)}"#{braket} target="_top">!
               unless value =~ /http/
-                %Q! #{ attribute}="./?ssb_q=#{ WEBrick::HTTPUtils.escape_form((request_host + '/' + CGI.unescapeHTML(value)).to_s)}"#{$5} target="_top">!
+                %Q! #{ attribute}="./?ssb_q=#{ WEBrick::HTTPUtils.escape_form((request_host + '/' + CGI.unescapeHTML(value)).to_s)}"#{braket} target="_top">!
               else
-                %Q! #{ attribute}="./?ssb_q=#{ WEBrick::HTTPUtils.escape_form(((CGI.unescapeHTML(value))).to_s)}"#{$5} target="_top">!
+                %Q! #{ attribute}="./?ssb_q=#{ WEBrick::HTTPUtils.escape_form(((CGI.unescapeHTML(value))).to_s)}"#{braket} target="_top">!
               end
             end
           when 'action'
-            %Q! #{attribute}="./" #{$5}><input type="hidden" name="ssb_q" value="#{(request_uri + value).to_s}" />!
+            require 'pp'
+            if /(method)\s*=\s*(?:["'])(.+?)(?:["'])/.match(s)
+              method = $2
+            else
+              method = "get"
+            end
+            %Q! #{attribute}="./" method="#{method}" #{braket}><input type="hidden" name="ssb_q" value="#{(request_uri + value).to_s}" />!
           end
         rescue => err
           %Q! #{$1}=""!
