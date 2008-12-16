@@ -8,11 +8,74 @@
 require 'config/common'
 require 'ssb/ktai_db'
 require 'open-uri'
+require 'fileutils'
+require 'yaml'
+require 'csv'
+require 'nkf'
 
-uri = 'http://ke-tai.org/moblist/csv_down.php'
+# settings
+filename = File.basename(url)
+dirname  = File.dirname(__FILE__) + "/../config/"
+tmp_dir  = File.dirname(__FILE__) + "/../tmp/"
+user     = YAML.load_file(dirname + "impress.yml")
 
 print 'updating ke-tai list from ke-tai.org...'
 STDOUT.flush
+
+# retreive files
+Dir.chdir tmp_dir
+unless File.exist?(filename)
+  system("wget --http-user #{user} --http-password #{password} #{url}")
+  system("unzip -o #{filename}")
+end
+Dir.glob("*.csv").each do |file|
+  FileUtils.mv file, File.basename(file).gsub(/[^a-zA-Z\.]/, "")
+end
+
+# キャリア変換
+carriers = {
+  "DoCoMo"   => "DoCoMo",
+  "au"       => "au",
+  "Tu-Ka"    => "au",
+  "Softbank" => "Softbank",
+}
+
+profile_data = CSV.open("ProfileData").read
+user_agent   = CSV.open("UserAgent").read
+display_info = CSV.open("DisplayInfo").read
+
+# build csv file
+# "連番"
+# "メーカ名"
+# "機種名"
+# "機種略名"
+# "ユーザエージェント"
+# "タイプ１"
+# "タイプ２"
+# "ブラウザ幅(x)"
+# "ブラウザ高さ(y)"
+# "表示カラー数"
+# "ブラウザキャッシュ"
+# "GIF"
+# "JPG"
+# "PNG"
+# "Flash"
+# "Flashバージョン"
+# "Flashワークメモリ"
+# "Javaアプリ"
+# "BREW"
+# "HTML"
+# "SSL"
+# "ログイン"
+# "クッキー"
+# "CSS"
+# "GPS"
+# "発売日"
+# "備考"
+# "更新状況メモ"
+# "更新日"
+
+
 
 open(File.join(SSB::CONFIG[:config_dir], 'ke-tai_list.csv'), 'w') do |out|
   out.print open(uri).read()

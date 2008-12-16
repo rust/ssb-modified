@@ -1,3 +1,5 @@
 config/ke-tai_list.csv
+config/impress.yml
 public_html/**/*
 logs/*
+logs/*.*
