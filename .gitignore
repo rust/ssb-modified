@@ -3,3 +3,6 @@ config/impress.yml
 public_html/**/*
 logs/*
 logs/*.*
+tmp/*.csv
+tmp/*.pdf
+tmp/*.zip

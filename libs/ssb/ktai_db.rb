@@ -16,8 +16,8 @@ module SSB
       '機種名'             => :name,
       '機種略名'           => :name_abbr,
       'ユーザエージェント' => :useragent,
-      'タイプ１'            => :generation,
-      'タイプ２'            => :generation_ver,
+      'タイプ１'           => :generation,
+      'タイプ２'           => :generation_ver,
       'ブラウザ幅(x)'      => :screen_width,
       'ブラウザ高さ(y)'    => :screen_height,
       '表示カラー数'       => :colors,
@@ -63,7 +63,7 @@ module SSB
     def load_from_csv(filename)
       state = :start
       CSV.open(filename, 'r') do |csv|
-        csv = csv.map{|e| NKF::nkf('-w', e)}
+        csv = csv.map{|e| NKF::nkf('-w', e.to_s)}
         case state
         when :start
           state = :columns
